@@ -5,7 +5,6 @@ import {
   UserCheck,
   FileSpreadsheet,
   FileDown,
-  Printer,
   Sparkles,
   GraduationCap,
   TrendingUp,
@@ -138,10 +137,6 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <div className="space-y-6">
       {/* Top Banner & Control Toolbar (Hidden when printing) */}
@@ -156,7 +151,7 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
               Rekapitulasi Jumlah Siswa Laki-Laki dan Perempuan Per Kelas
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              Tabel rekapitulasi komparasi gender putra dan putri untuk setiap rombongan belajar (T.A 2026/2027). Tersedia format cetak dan unduh dokumen resmi ukuran F4 Portrait.
+              Tabel rekapitulasi komparasi gender putra dan putri untuk setiap rombongan belajar (T.A 2026/2027). Tersedia format unduh dokumen resmi ukuran F4 Portrait.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -180,14 +175,6 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
                 <FileDown className="w-4 h-4" />
               )}
               <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF (F4)'}</span>
-            </button>
-            <button
-              onClick={handlePrint}
-              className="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2.5 rounded-xl border border-white/20 backdrop-blur-xs transition flex items-center gap-2"
-              title="Cetak langsung dalam format F4 Portrait"
-            >
-              <Printer className="w-4 h-4 text-emerald-400" />
-              <span>Print F4 Portrait</span>
             </button>
           </div>
         </div>
@@ -411,14 +398,14 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
             <div className="text-center space-y-14 w-64">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
-                {penjabatData.ks.jabatan || 'Kepala SMPN 18 Jakarta'}
+                {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
               <div>
                 <p className="font-bold underline text-slate-950 text-sm uppercase">
-                  {penjabatData.ks.nama || 'Drs. H. Mulyadi, M.Pd.'}
+                  {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
                 </p>
                 <p className="text-[11px] font-normal text-slate-700">
-                  NIP. {penjabatData.ks.nip || '196803121995121001'}
+                  NIP. {penjabatData?.ks?.nip ? penjabatData.ks.nip : '...................................................'}
                 </p>
               </div>
             </div>

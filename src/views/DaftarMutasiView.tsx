@@ -9,7 +9,6 @@ import {
   Trash2,
   FileSpreadsheet,
   FileDown,
-  Printer,
   Calendar,
   Filter,
   Search,
@@ -232,9 +231,6 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
     }
   );
 
-  const handlePrint = () => {
-    window.print();
-  };
 
   const handleDownloadPDF = async () => {
     if (!printableRef.current) return;
@@ -383,9 +379,6 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
     }
   };
 
-  const handlePrintRekap = () => {
-    window.print();
-  };
 
   return (
     <div className="space-y-6">
@@ -614,13 +607,7 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
                 <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF'}</span>
               </button>
 
-              <button
-                onClick={handlePrint}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-amber-600/20"
-              >
-                <Printer className="w-4 h-4" />
-                <span>Cetak Lembar Mutasi</span>
-              </button>
+
             </div>
           </div>
 
@@ -782,14 +769,14 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
               <div className="text-center space-y-8 w-60">
                 <p className="leading-snug">
                   Jakarta, <span>{todayStr}</span><br />
-                  {penjabatData.ks.jabatan || 'Kepala SMPN 18 Jakarta'}
+                  {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
                 </p>
                 <div>
                   <p className="font-bold underline text-slate-900 text-xs uppercase">
-                    {penjabatData.ks.nama || 'Drs. H. Mulyadi, M.Pd.'}
+                    {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
                   </p>
                   <p className="text-[10px] font-normal text-slate-600">
-                    NIP. {penjabatData.ks.nip || '196803121995121001'}
+                    NIP. {penjabatData?.ks?.nip ? penjabatData.ks.nip : '...................................................'}
                   </p>
                 </div>
               </div>
@@ -854,14 +841,7 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
                 )}
                 <span>{isGeneratingRekapPDF ? 'Membuat PDF...' : 'Unduh PDF Landscape (F4)'}</span>
               </button>
-              <button
-                onClick={handlePrintRekap}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs shadow-indigo-600/20"
-                title="Cetak dokumen dalam format F4 Landscape"
-              >
-                <Printer className="w-4 h-4 text-white" />
-                <span>Print F4 Landscape</span>
-              </button>
+
             </div>
           </div>
 
@@ -1043,14 +1023,14 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
                 <div className="text-center space-y-8 w-60">
                   <p className="leading-snug">
                     Jakarta, <span>{todayStr}</span><br />
-                    {penjabatData.ks.jabatan || 'Kepala SMPN 18 Jakarta'}
+                    {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
                   </p>
                   <div>
                     <p className="font-bold underline text-slate-950 text-xs uppercase">
-                      {penjabatData.ks.nama || 'Drs. H. Mulyadi, M.Pd.'}
+                      {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
                     </p>
                     <p className="text-[10px] font-normal text-slate-700">
-                      NIP. {penjabatData.ks.nip || '196803121995121001'}
+                      NIP. {penjabatData?.ks?.nip ? penjabatData.ks.nip : '...................................................'}
                     </p>
                   </div>
                 </div>

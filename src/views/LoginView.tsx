@@ -3,12 +3,12 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Sparkles,
   ArrowRight,
   User,
   GraduationCap,
 } from 'lucide-react';
 import { UserAuth, UserAccount, WaliKelas } from '../types';
+import { INITIAL_DEFAULT_USERS } from './PengaturanPenggunaView';
 
 interface LoginViewProps {
   onLoginSuccess: (user: UserAuth) => void;
@@ -38,10 +38,24 @@ export const LoginView: React.FC<LoginViewProps> = ({
   const handleLogin = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setErrorMessage('');
+
+    const inputUsername = identifier.trim();
+    const inputPassword = password;
+
+    if (!inputUsername) {
+      setErrorMessage('Silakan masukkan username akun Anda.');
+      return;
+    }
+
+    if (!inputPassword) {
+      setErrorMessage('Silakan masukkan kata sandi akun Anda.');
+      return;
+    }
+
     setIsLoading(true);
 
     setTimeout(() => {
-      // Get all available accounts from props or localStorage
+      // Get all registered accounts from props, localStorage, or INITIAL_DEFAULT_USERS
       let accounts: UserAccount[] = userAccounts;
       if (!accounts || accounts.length === 0) {
         const saved = localStorage.getItem('smpn18_users');
@@ -53,137 +67,51 @@ export const LoginView: React.FC<LoginViewProps> = ({
           }
         }
       }
-
-      const inputId = identifier.trim();
-      const inputPwd = password.trim();
-
-      // If user enters nothing or enters 12345, default to 12345 (Admin/Operator)
-      const isDefault = (!inputId && !inputPwd) || (inputId === '12345' && (!inputPwd || inputPwd === '12345'));
-
-      if (isDefault) {
-        // Find default admin account if available
-        const defaultAdmin = accounts?.find(
-          (u) => u.username === '12345' || u.role === 'Admin'
-        );
-
-        const user: UserAuth = {
-          nama: defaultAdmin?.nama || 'Nuryaman, S.Pd.',
-          email: defaultAdmin?.email || 'admin@smpn18.sch.id',
-          role: defaultAdmin?.role || 'Admin',
-          loginAt: new Date().toISOString(),
-        };
-
-        if (rememberMe) {
-          localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
-        }
-        setIsLoading(false);
-        onLoginSuccess(user);
-        return;
+      if (!accounts || accounts.length === 0) {
+        accounts = INITIAL_DEFAULT_USERS;
       }
 
-      // Check against registered accounts in userAccounts
-      const matchedAccount = accounts?.find(
+      // Check strictly against registered accounts in Data Pengguna
+      const matchedAccount = accounts.find(
         (u) =>
-          u.username.toLowerCase() === inputId.toLowerCase() ||
-          (u.email && u.email.toLowerCase() === inputId.toLowerCase()) ||
-          (u.nip && u.nip === inputId)
+          u.username.trim().toLowerCase() === inputUsername.toLowerCase() ||
+          (u.email && u.email.trim().toLowerCase() === inputUsername.toLowerCase()) ||
+          (u.nip && u.nip.trim() === inputUsername)
       );
 
-      if (matchedAccount) {
-        // Verify password if provided
-        if (inputPwd && inputPwd !== matchedAccount.password) {
-          setIsLoading(false);
-          setErrorMessage('Kata sandi yang Anda masukkan salah.');
-          return;
-        }
-
-        const user: UserAuth = {
-          nama: matchedAccount.nama,
-          email: matchedAccount.email || `${matchedAccount.username}@smpn18.sch.id`,
-          role: matchedAccount.role,
-          nip: matchedAccount.nip,
-          kelasAjar: matchedAccount.kelasAjar,
-          loginAt: new Date().toISOString(),
-        };
-
-        if (rememberMe) {
-          localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
-        }
+      if (!matchedAccount) {
         setIsLoading(false);
-        onLoginSuccess(user);
+        setErrorMessage(
+          'Username tidak terdaftar di Data Pengguna. Pastikan username sudah terdaftar.'
+        );
         return;
       }
 
-      // Fallback matching for generic inputs
-      const idLower = inputId.toLowerCase();
-      if (idLower.includes('admin') || idLower.includes('operator')) {
-        const user: UserAuth = {
-          nama: 'Nuryaman, S.Pd.',
-          email: inputId,
-          role: 'Admin',
-          loginAt: new Date().toISOString(),
-        };
-        if (rememberMe) {
-          localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
-        }
+      // Strict check: kata sandi harus sama dengan yang ada di Data Pengguna
+      if (inputPassword !== matchedAccount.password) {
         setIsLoading(false);
-        onLoginSuccess(user);
+        setErrorMessage(
+          'Kata sandi salah. Pastikan kata sandi sama dengan data di Data Pengguna.'
+        );
         return;
       }
 
-      if (idLower.includes('kepsek') || idLower.includes('mulyadi') || idLower.includes('lina')) {
-        const user: UserAuth = {
-          nama: 'Drs. H. Mulyadi, M.Pd.',
-          email: inputId,
-          role: 'Kepala Sekolah',
-          loginAt: new Date().toISOString(),
-        };
-        if (rememberMe) {
-          localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
-        }
-        setIsLoading(false);
-        onLoginSuccess(user);
-        return;
+      // Valid credentials matching Data Pengguna
+      const user: UserAuth = {
+        nama: matchedAccount.nama,
+        email: matchedAccount.email || `${matchedAccount.username}@smpn18.sch.id`,
+        role: matchedAccount.role,
+        nip: matchedAccount.nip,
+        kelasAjar: matchedAccount.kelasAjar,
+        loginAt: new Date().toISOString(),
+      };
+
+      if (rememberMe) {
+        localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
       }
-
-      // Fallback match Wali Kelas / Guru
-      const matchedTeacher = waliKelasList.find(
-        (w) =>
-          w.nip === inputId ||
-          w.nama.toLowerCase().includes(idLower) ||
-          idLower.includes(w.nama.toLowerCase().split(' ')[0].toLowerCase())
-      );
-
-      if (matchedTeacher || idLower.includes('guru')) {
-        const teacherData = matchedTeacher || waliKelasList[0] || {
-          kelas: 'VII-A',
-          nama: 'Siti Aminah, S.Pd.',
-          nip: '198201052009022003',
-        };
-
-        const user: UserAuth = {
-          nama: teacherData.nama,
-          email: inputId.includes('@') ? inputId : `${teacherData.nip}@guru.smp.belajar.id`,
-          role: 'Guru',
-          nip: teacherData.nip,
-          kelasAjar: teacherData.kelas,
-          loginAt: new Date().toISOString(),
-        };
-
-        if (rememberMe) {
-          localStorage.setItem('smpn18_auth_user', JSON.stringify(user));
-        }
-        setIsLoading(false);
-        onLoginSuccess(user);
-        return;
-      }
-
-      // Account not found
       setIsLoading(false);
-      setErrorMessage(
-        'Akun tidak ditemukan. Gunakan username/password default 12345 atau hubungi Administrator.'
-      );
-    }, 300);
+      onLoginSuccess(user);
+    }, 250);
   };
 
   return (
@@ -211,7 +139,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
               {namaSekolah || 'SMP NEGERI 18 JAKARTA'}
             </h1>
             <p className="text-[11px] text-blue-400 font-medium">
-              Sistem Informasi Data Siswa Form 8355 & Buku Induk
+              Sistem Informasi Data Siswa Form 8355
             </p>
           </div>
         </div>
@@ -244,12 +172,8 @@ export const LoginView: React.FC<LoginViewProps> = ({
           </div>
 
           <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[11px] font-semibold mb-2">
-              <Sparkles className="w-3 h-3 text-amber-400" />
-              Sistem Buku Induk & Form 8355
-            </div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Login Aplikasi 8355
+              Sistem Aplikasi 8355
             </h2>
           </div>
 
@@ -273,10 +197,11 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 </div>
                 <input
                   type="text"
+                  required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="12345"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition font-mono font-medium"
+                  placeholder=""
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition font-mono font-medium"
                 />
               </div>
             </div>
@@ -293,10 +218,11 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="12345"
-                  className="w-full pl-10 pr-10 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition font-mono"
+                  placeholder=""
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-950/60 border border-slate-700 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition font-mono"
                 />
                 <button
                   type="button"
@@ -334,7 +260,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 </>
               ) : (
                 <>
-                  <span>Login Aplikasi 8355</span>
+                  <span>Login</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

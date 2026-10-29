@@ -17,7 +17,6 @@ import {
   Server,
   LogOut,
   Users,
-  Cloud,
 } from 'lucide-react';
 import { ActiveTab, UserAuth } from '../types';
 
@@ -66,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
       case 'pengaturan-penjabat':
         return {
           icon: <UserCheck className="w-5 h-5 text-amber-500" />,
-          title: 'Input Data Penjabat & Wali Kelas',
+          title: 'Input Data Pejabat & Wali Kelas',
           subtitle: 'Data Kepala Sekolah, Pengawas Pembina, dan daftar rombel wali kelas',
         };
       case 'pengaturan-pengguna':
@@ -104,12 +103,6 @@ export const Header: React.FC<HeaderProps> = ({
           icon: <ArrowRightLeft className="w-5 h-5 text-amber-600" />,
           title: 'Daftar & Rekapitulasi Mutasi Siswa',
           subtitle: 'Daftar mutasi masuk/keluar per bulan dan rekapitulasi perubahan jumlah siswa',
-        };
-      case 'google-drive-sync':
-        return {
-          icon: <Cloud className="w-5 h-5 text-blue-600" />,
-          title: 'Integrasi Google Drive',
-          subtitle: 'Sinkronisasi cloud backup basis data & file ekspor SMPN 18 Jakarta',
         };
       default:
         return {

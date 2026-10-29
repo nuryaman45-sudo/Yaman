@@ -11,28 +11,21 @@ export const INITIAL_PROFIL_SEKOLAH: ProfilSekolah = {
   dinas: 'Dinas Pendidikan',
   namaSekolah: 'SMP NEGERI 18 JAKARTA',
   npsn: '20100123',
-  alamat: 'Jl. Menteng Kecil No. 3, Jakarta Pusat, Kode Pos 10340',
+  alamat: 'Jl. Menteng Kecil No. 3 RT 12 RW 9, Kebon Sirih, Menteng, Jakarta Pusat 10340',
   sidebarTitle: 'SMPN 18 JAKARTA',
 };
 
 export const INITIAL_PENJABAT: PenjabatData = {
   ks: {
-    nama: 'Drs. H. Mulyadi, M.Pd.',
-    nip: '196803121995121001',
-    jabatan: 'Kepala SMPN 18 Jakarta',
+    nama: '',
+    nip: '',
+    jabatan: '',
   },
   pengawas: {
-    nama: 'Dr. Hj. Sri Rahayu, M.Pd.',
-    nip: '196508151990032002',
+    nama: '',
+    nip: '',
   },
-  waliKelas: [
-    { kelas: 'VII-A', nama: 'Siti Aminah, S.Pd.', nip: '198201052009022003' },
-    { kelas: 'VII-B', nama: 'Budi Raharjo, M.Pd.', nip: '197904122005011002' },
-    { kelas: 'VII-C', nama: 'Dra. Hj. Nurjanah', nip: '197406182000032001' },
-    { kelas: 'VIII-A', nama: 'Achmad Fauzan, S.Si.', nip: '198509202010011015' },
-    { kelas: 'VIII-B', nama: 'Endang Purwanti, S.Pd.', nip: '198303142008012019' },
-    { kelas: 'IX-A', nama: 'Rahmat Hidayat, M.Kom.', nip: '197811052003121004' },
-  ],
+  waliKelas: [],
 };
 
 export const INITIAL_SISWA: Siswa[] = [

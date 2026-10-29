@@ -22,7 +22,6 @@ import { PengaturanProfilView } from './views/PengaturanProfilView';
 import { PengaturanLogoView } from './views/PengaturanLogoView';
 import { PengaturanPenjabatView } from './views/PengaturanPenjabatView';
 import { PengaturanPenggunaView, INITIAL_DEFAULT_USERS } from './views/PengaturanPenggunaView';
-import { GoogleDriveSyncView } from './views/GoogleDriveSyncView';
 import { LoginView } from './views/LoginView';
 import {
   ActiveTab,
@@ -66,7 +65,15 @@ export default function App() {
     const saved = localStorage.getItem('smpn18_profil');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (
+          parsed.alamat === 'Jl. Menteng Kecil No. 3, Jakarta Pusat, Kode Pos 10340' ||
+          parsed.alamat?.includes('Kode Pos 10340')
+        ) {
+          parsed.alamat = 'Jl. Menteng Kecil No. 3 RT 12 RW 9, Kebon Sirih, Menteng, Jakarta Pusat 10340';
+          localStorage.setItem('smpn18_profil', JSON.stringify(parsed));
+        }
+        return parsed;
       } catch (e) {
         console.error(e);
       }
@@ -78,7 +85,13 @@ export default function App() {
     const saved = localStorage.getItem('smpn18_penjabat');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Reset if it contains the old initial mock data
+        if (parsed.ks?.nama === 'Drs. H. Mulyadi, M.Pd.' || parsed.pengawas?.nama === 'Dr. Hj. Sri Rahayu, M.Pd.') {
+          localStorage.setItem('smpn18_penjabat', JSON.stringify(INITIAL_PENJABAT));
+          return INITIAL_PENJABAT;
+        }
+        return parsed;
       } catch (e) {
         console.error(e);
       }
@@ -198,7 +211,6 @@ export default function App() {
         'pengaturan-logo',
         'pengaturan-penjabat',
         'pengaturan-pengguna',
-        'google-drive-sync',
         'format-8355-main',
         'daftar-mutasi-main',
       ];
@@ -297,7 +309,7 @@ export default function App() {
   const handleSavePenjabat = (newData: PenjabatData) => {
     setPenjabatData(newData);
     localStorage.setItem('smpn18_penjabat', JSON.stringify(newData));
-    showToast('Data penjabat dan wali kelas berhasil disimpan!', 'success');
+    showToast('Data pejabat dan wali kelas berhasil disimpan!', 'success');
   };
 
   const handleUpdateLogo = (type: 'dki' | 'sekolah' | 'sidebar', dataUrl: string) => {
@@ -606,16 +618,6 @@ export default function App() {
               userAccounts={userAccounts}
               onSaveUserAccounts={handleSaveUserAccounts}
               waliKelasList={penjabatData.waliKelas}
-            />
-          )}
-
-          {activeTab === 'google-drive-sync' && (
-            <GoogleDriveSyncView
-              siswaList={siswaList}
-              mutasiList={mutasiList}
-              profilSekolah={profilSekolah}
-              penjabatData={penjabatData}
-              showToast={showToast}
             />
           )}
         </main>

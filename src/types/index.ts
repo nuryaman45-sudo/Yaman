@@ -70,8 +70,7 @@ export type ActiveTab =
   | 'format-8355-cetak'
   | 'daftar-siswa-main'
   | 'daftar-absen-main'
-  | 'daftar-mutasi-main'
-  | 'google-drive-sync';
+  | 'daftar-mutasi-main';
 
 export interface ToastMessage {
   id: string;

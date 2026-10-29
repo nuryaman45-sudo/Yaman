@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import {
-  Printer,
   FileDown,
   Filter,
   FileSpreadsheet,
@@ -50,9 +49,6 @@ export const DaftarSiswaView: React.FC<DaftarSiswaViewProps> = ({
   const TARGET_ROWS = 36;
   const emptyRowsCount = Math.max(0, TARGET_ROWS - filtered.length);
 
-  const handlePrint = () => {
-    window.print();
-  };
 
   // Unduh Excel murni (.xlsx)
   const handleDownloadExcel = () => {
@@ -154,14 +150,7 @@ export const DaftarSiswaView: React.FC<DaftarSiswaViewProps> = ({
             <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF (1 Halaman)'}</span>
           </button>
 
-          {/* Tombol Print F4 Portrait */}
-          <button
-            onClick={handlePrint}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-indigo-600/20"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Print F4 (1 Halaman)</span>
-          </button>
+
         </div>
       </div>
 

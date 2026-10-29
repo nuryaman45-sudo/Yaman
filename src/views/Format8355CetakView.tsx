@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Printer, FileDown, Filter, Loader2 } from 'lucide-react';
+import { FileDown, Filter, Loader2 } from 'lucide-react';
 import { Siswa, WaliKelas, ProfilSekolah, PenjabatData } from '../types';
 import { exportMultiplePagesToPDF } from '../utils/pdfExport';
 
@@ -35,10 +35,6 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
     month: 'long',
     year: 'numeric',
   }).format(new Date());
-
-  const handlePrint = () => {
-    window.print();
-  };
 
   const handleDownloadPDF = async () => {
     if (!page1Ref.current || !page2Ref.current) return;
@@ -135,15 +131,6 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
             )}
             <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF (2 Halaman)'}</span>
           </button>
-
-          {/* Cetak F4 Landscape */}
-          <button
-            onClick={handlePrint}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-emerald-600/20"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Cetak Form 8355 (2 Halaman F4)</span>
-          </button>
         </div>
       </div>
 
@@ -205,7 +192,7 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
                 {profilSekolah.alamat || 'Jl. Menteng Kecil No. 3, Jakarta Pusat'} | NPSN: {profilSekolah.npsn || '20100123'}
               </p>
               <h3 className="text-xs font-black underline uppercase tracking-widest mt-1.5 text-slate-950">
-                FORMULIR 8355 (BUKU INDUK PESERTA DIDIK)
+                Form 8355 Peserta Didik
               </h3>
             </div>
 
@@ -258,7 +245,7 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-slate-500 font-semibold pt-1 border-t border-slate-200">
-            <span>Formulir 8355 (Buku Induk) - SMPN 18 Jakarta</span>
+            <span>Form 8355 Peserta Didik - SMPN 18 Jakarta</span>
             <span>Halaman 1 dari 2</span>
           </div>
         </div>
@@ -283,7 +270,7 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
                   {profilSekolah.namaSekolah || 'SMP NEGERI 18 JAKARTA'}
                 </h3>
                 <p className="text-[10px] font-bold text-slate-600 uppercase">
-                  FORMULIR 8355 (BUKU INDUK SISWA) — LEMBAR LANJUTAN
+                  Form 8355 Peserta Didik — LEMBAR LANJUTAN
                 </p>
               </div>
             </div>
@@ -332,10 +319,10 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
               </p>
               <div>
                 <p className="font-bold underline text-slate-900 text-xs uppercase">
-                  {penjabatData.pengawas.nama || 'Dr. Hj. Sri Rahayu, M.Pd.'}
+                  {penjabatData?.pengawas?.nama ? penjabatData.pengawas.nama : '...................................................'}
                 </p>
                 <p className="text-[10px] font-normal text-slate-600">
-                  NIP. {penjabatData.pengawas.nip || '196508151990032002'}
+                  NIP. {penjabatData?.pengawas?.nip ? penjabatData.pengawas.nip : '...................................................'}
                 </p>
               </div>
             </div>
@@ -343,21 +330,21 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
             <div className="text-center space-y-10">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
-                {penjabatData.ks.jabatan || 'Kepala SMPN 18 Jakarta'}
+                {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
               <div>
                 <p className="font-bold underline text-slate-900 text-xs uppercase">
-                  {penjabatData.ks.nama || 'Drs. H. Mulyadi, M.Pd.'}
+                  {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
                 </p>
                 <p className="text-[10px] font-normal text-slate-600">
-                  NIP. {penjabatData.ks.nip || '196803121995121001'}
+                  NIP. {penjabatData?.ks?.nip ? penjabatData.ks.nip : '...................................................'}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between text-[10px] text-slate-500 font-semibold pt-1 border-t border-slate-200">
-            <span>Formulir 8355 (Buku Induk) - SMPN 18 Jakarta</span>
+            <span>Form 8355 Peserta Didik - SMPN 18 Jakarta</span>
             <span>Halaman 2 dari 2</span>
           </div>
         </div>

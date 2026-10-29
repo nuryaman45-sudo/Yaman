@@ -65,6 +65,7 @@ export const PengaturanPenggunaView: React.FC<PengaturanPenggunaViewProps> = ({
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserAccount | null>(null);
 
   // Form State
   const [formData, setFormData] = useState<{
@@ -125,15 +126,14 @@ export const PengaturanPenggunaView: React.FC<PengaturanPenggunaViewProps> = ({
   };
 
   const handleDeleteUser = (user: UserAccount) => {
-    if (user.username === '12345' && userAccounts.filter((u) => u.role === 'Admin').length <= 1) {
-      alert('Akun Admin default (12345) tidak dapat dihapus jika hanya tersisa satu akun Admin.');
-      return;
-    }
+    setUserToDelete(user);
+  };
 
-    if (window.confirm(`Yakin ingin menghapus akun pengguna "${user.nama}" (${user.username})?`)) {
-      const updated = userAccounts.filter((u) => u.id !== user.id);
-      onSaveUserAccounts(updated);
-    }
+  const confirmDeleteUser = () => {
+    if (!userToDelete) return;
+    const updated = userAccounts.filter((u) => u.id !== userToDelete.id);
+    onSaveUserAccounts(updated);
+    setUserToDelete(null);
   };
 
   const handleResetDefault = () => {
@@ -463,8 +463,9 @@ export const PengaturanPenggunaView: React.FC<PengaturanPenggunaViewProps> = ({
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
+                            type="button"
                             onClick={() => handleDeleteUser(user)}
-                            className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                            className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg transition cursor-pointer"
                             title="Hapus pengguna"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -666,6 +667,62 @@ export const PengaturanPenggunaView: React.FC<PengaturanPenggunaViewProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Hapus Pengguna */}
+      {userToDelete && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div className="flex items-center space-x-3 text-rose-600">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-rose-600" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900">
+                Konfirmasi Hapus Pengguna
+              </h3>
+            </div>
+
+            {userToDelete.username === '12345' && userAccounts.filter((u) => u.role === 'Admin').length <= 1 ? (
+              <div className="space-y-3">
+                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 leading-relaxed">
+                  Akun Admin default (<strong>12345</strong>) tidak dapat dihapus jika hanya tersisa satu akun Admin di sistem.
+                </div>
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setUserToDelete(null)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
+                  >
+                    Tutup
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Apakah Anda yakin ingin menghapus akun pengguna{' '}
+                  <strong className="text-slate-900 font-bold">{userToDelete.nama}</strong> ({userToDelete.username} - {userToDelete.role})?
+                </p>
+                <div className="flex items-center justify-end space-x-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setUserToDelete(null)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={confirmDeleteUser}
+                    className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition shadow-sm shadow-rose-500/20 cursor-pointer"
+                  >
+                    Ya, Hapus Pengguna
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

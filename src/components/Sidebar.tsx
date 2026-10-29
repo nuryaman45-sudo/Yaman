@@ -18,7 +18,6 @@ import {
   Server,
   LogOut,
   Users,
-  Cloud,
 } from 'lucide-react';
 import { ActiveTab, ProfilSekolah, UserAuth } from '../types';
 
@@ -218,7 +217,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                   >
                     <UserCheck className="w-3.5 h-3.5 mr-2 text-amber-400" />
-                    Input Data Penjabat
+                    Input Data Pejabat
                   </button>
                   <button
                     onClick={() => handleSelectTab('pengaturan-pengguna')}
@@ -230,17 +229,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     <Users className="w-3.5 h-3.5 mr-2 text-amber-400" />
                     Data Pengguna
-                  </button>
-                  <button
-                    onClick={() => handleSelectTab('google-drive-sync')}
-                    className={`w-full text-left py-2 px-3 rounded-lg text-xs font-medium flex items-center transition ${
-                      activeTab === 'google-drive-sync'
-                        ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                    }`}
-                  >
-                    <Cloud className="w-3.5 h-3.5 mr-2 text-blue-400" />
-                    Integrasi Google Drive
                   </button>
                 </div>
               )}

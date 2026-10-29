@@ -115,7 +115,7 @@ export const PengaturanProfilView: React.FC<PengaturanProfilViewProps> = ({
               value={formData.alamat}
               onChange={(e) => setFormData({ ...formData, alamat: e.target.value })}
               required
-              placeholder="Jl. Menteng Kecil No. 3, Jakarta Pusat, Kode Pos 10340"
+              placeholder="Jl. Menteng Kecil No. 3 RT 12 RW 9, Kebon Sirih, Menteng, Jakarta Pusat 10340"
               className="w-full border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-amber-500 outline-none transition font-medium"
             />
           </div>

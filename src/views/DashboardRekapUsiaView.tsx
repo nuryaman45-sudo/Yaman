@@ -6,7 +6,6 @@ import {
   Filter,
   FileSpreadsheet,
   FileDown,
-  Printer,
   Sparkles,
   Cake,
   TrendingUp,
@@ -186,27 +185,6 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const getCategoryBadgeClass = (category: string) => {
-    switch (category) {
-      case '< 12 Tahun':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
-      case '12 Tahun':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case '13 Tahun':
-        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
-      case '14 Tahun':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-      case '≥ 15 Tahun':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      default:
-        return 'bg-slate-100 text-slate-800 border-slate-200';
-    }
-  };
-
   const formatDateIndo = (dateStr: string) => {
     if (!dateStr) return '-';
     try {
@@ -236,7 +214,7 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
               Rekapitulasi Kategori Nama dan Usia Siswa
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              Pemantauan sebaran usia dan kategori rombel peserta didik SMPN 18 Jakarta. Dilengkapi fitur unduh Excel, unduh PDF resmi, dan cetak F4 Portrait.
+              Pemantauan sebaran usia dan kategori rombel peserta didik SMPN 18 Jakarta. Dilengkapi fitur unduh Excel dan unduh PDF resmi ukuran F4 Portrait.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -260,14 +238,6 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
                 <FileDown className="w-4 h-4" />
               )}
               <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF (F4)'}</span>
-            </button>
-            <button
-              onClick={handlePrint}
-              className="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2.5 rounded-xl border border-white/20 backdrop-blur-xs transition flex items-center gap-2"
-              title="Cetak langsung dalam format F4 Portrait"
-            >
-              <Printer className="w-4 h-4 text-emerald-400" />
-              <span>Print F4 Portrait</span>
             </button>
           </div>
         </div>
@@ -610,14 +580,14 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
             <div className="text-center space-y-14 w-64">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
-                {penjabatData.ks.jabatan || 'Kepala SMPN 18 Jakarta'}
+                {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
               <div>
                 <p className="font-bold underline text-slate-950 text-sm uppercase">
-                  {penjabatData.ks.nama || 'Lina Puspasari, M.Pd.'}
+                  {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
                 </p>
                 <p className="text-[11px] font-normal text-slate-700">
-                  NIP. {penjabatData.ks.nip || '197001251995122002'}
+                  NIP. {penjabatData?.ks?.nip ? penjabatData.ks.nip : '...................................................'}
                 </p>
               </div>
             </div>

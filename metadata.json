@@ -1,6 +1,6 @@
 {
   "name": "Sistem Data Form 8355 - SMP Negeri 18 Jakarta",
-  "description": "Aplikasi manajemen data siswa Buku Induk Form 8355, Daftar Peserta Didik, Absensi Siswa, dan Pengaturan Penjabat SMP Negeri 18 Jakarta dengan format cetak F4.",
+  "description": "Aplikasi manajemen data siswa Buku Induk Form 8355, Daftar Peserta Didik, Absensi Siswa, dan Pengaturan Pejabat SMP Negeri 18 Jakarta dengan format cetak F4.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Printer, Filter, Calendar, FileDown, Loader2 } from 'lucide-react';
+import { Filter, Calendar, FileDown, Loader2 } from 'lucide-react';
 import { Siswa, WaliKelas } from '../types';
 import { exportMultiplePagesToPDF } from '../utils/pdfExport';
 
@@ -50,10 +50,6 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
     month: 'long',
     year: 'numeric',
   }).format(new Date());
-
-  const handlePrint = () => {
-    window.print();
-  };
 
   const handleDownloadPDF = async () => {
     if (!page1Ref.current || !page2Ref.current) return;
@@ -169,14 +165,7 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
             <span>{isGeneratingPDF ? 'Membuat PDF...' : 'Unduh PDF'}</span>
           </button>
 
-          {/* Tombol Cetak */}
-          <button
-            onClick={handlePrint}
-            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm shadow-teal-600/20"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Cetak Absensi (2 Halaman)</span>
-          </button>
+
         </div>
       </div>
 
@@ -208,7 +197,7 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
         >
           <div className="text-center space-y-1 pb-2 border-b border-slate-200">
             <h3 className="font-black text-slate-900 text-sm sm:text-base uppercase tracking-wider flex items-center justify-center gap-2">
-              <span>DAFTAR ABSENSI PESERTA DIDIK (HALAMAN 1)</span>
+              <span>DAFTAR ABSENSI PESERTA DIDIK</span>
               <span className="text-[10px] bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-full border border-teal-300 font-bold uppercase">
                 T.A 2026/2027
               </span>
@@ -264,7 +253,7 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
         >
           <div className="text-center space-y-1 pb-2 border-b border-slate-200">
             <h3 className="font-black text-slate-900 text-sm sm:text-base uppercase tracking-wider flex items-center justify-center gap-2">
-              <span>DAFTAR ABSENSI PESERTA DIDIK (HALAMAN 2)</span>
+              <span>DAFTAR ABSENSI PESERTA DIDIK</span>
               <span className="text-[10px] bg-teal-100 text-teal-800 px-2.5 py-0.5 rounded-full border border-teal-300 font-bold uppercase">
                 T.A 2026/2027
               </span>
