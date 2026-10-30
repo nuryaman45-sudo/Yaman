@@ -234,12 +234,12 @@ export const DaftarSiswaView: React.FC<DaftarSiswaViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse border border-slate-700 text-[9.5px]">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-black uppercase tracking-wider">
-                  <th className="py-1 px-1 text-center w-8 border border-slate-700">NO.</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold uppercase tracking-wider text-[9.5px]">
+                  <th className="py-1 px-1 text-center w-9 border border-slate-700">NO.</th>
                   <th className="py-1 px-2 border border-slate-700 text-left">NAMA PESERTA DIDIK</th>
-                  <th className="py-1 px-1 border border-slate-700 w-20 text-center">NIS</th>
-                  <th className="py-1 px-1 border border-slate-700 w-24 text-center">NISN</th>
-                  <th className="py-1 px-1 text-center border border-slate-700 w-8">JK</th>
+                  <th className="py-1 px-1 border border-slate-700 w-24 text-center">NIS</th>
+                  <th className="py-1 px-1 border border-slate-700 w-28 text-center">NISN</th>
+                  <th className="py-1 px-1 text-center border border-slate-700 w-10">JK</th>
                   <th className="py-1 px-2 border border-slate-700 w-28 text-center">AGAMA</th>
                 </tr>
               </thead>
@@ -285,12 +285,23 @@ export const DaftarSiswaView: React.FC<DaftarSiswaViewProps> = ({
           </div>
 
           {/* Tanda Tangan Wali Kelas */}
-          <div className="pt-2 flex justify-end text-[11px] font-semibold uppercase">
-            <div className="text-center space-y-8 w-60">
+          <div className="pt-2 flex justify-end text-[11px] font-semibold uppercase tanda-tangan-block">
+            <div className="text-center flex flex-col justify-between h-28 w-60">
               <p className="leading-tight">
                 JAKARTA, <span>{todayStr.toUpperCase()}</span><br />
                 WALI KELAS {selectedKelas !== 'ALL' ? selectedKelas : currentWaliKelas?.kelas || '-'}
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {currentWaliKelas?.ttd ? (
+                  <img
+                    src={currentWaliKelas.ttd}
+                    alt="TTD Wali Kelas"
+                    className="h-12 max-w-[130px] object-contain"
+                  />
+                ) : (
+                  <div className="h-8" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-900">
                   {(currentWaliKelas?.nama || '-').toUpperCase()}

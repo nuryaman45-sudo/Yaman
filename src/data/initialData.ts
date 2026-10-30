@@ -20,10 +20,12 @@ export const INITIAL_PENJABAT: PenjabatData = {
     nama: '',
     nip: '',
     jabatan: '',
+    ttd: '',
   },
   pengawas: {
     nama: '',
     nip: '',
+    ttd: '',
   },
   waliKelas: [],
 };

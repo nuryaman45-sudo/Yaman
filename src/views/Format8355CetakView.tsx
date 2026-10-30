@@ -62,31 +62,31 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
   const renderRow = (s: Siswa | undefined, rowNumber: number) => {
     return (
       <tr key={s ? s.id : `empty-row-${rowNumber}`} className="hover:bg-slate-50 transition">
-        <td className="border border-slate-700 py-1 px-1.5 text-center font-bold text-slate-800 text-[10px]">
+        <td className="border border-slate-700 py-1 px-1 text-center font-bold text-slate-800 text-[9.5px]">
           {rowNumber}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 font-bold text-slate-900 text-[10px]">
+        <td className="border border-slate-700 py-1 px-2 font-bold text-slate-900 text-[10px] truncate max-w-[200px]">
           {s?.nama ? s.nama.toUpperCase() : ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-center font-semibold text-[10px]">
+        <td className="border border-slate-700 py-1 px-1 text-center font-semibold text-[9.5px]">
           {s?.kelas || ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-center font-mono text-[9.5px]">
+        <td className="border border-slate-700 py-1 px-1 text-center font-mono text-[9px] text-slate-800">
           {s ? `${s.nis} / ${s.nisn}` : ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-center font-bold text-[10px]">
+        <td className="border border-slate-700 py-1 px-1 text-center font-bold text-[9.5px]">
           {s?.jk || ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-[10px]">
+        <td className="border border-slate-700 py-1 px-2 text-[9.5px] text-slate-800">
           {s ? `${s.tempatLahir}, ${s.tglLahir}` : ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-center text-[10px]">
+        <td className="border border-slate-700 py-1 px-1.5 text-center text-[9.5px] text-slate-800">
           {s?.agama || ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-[10px]">
+        <td className="border border-slate-700 py-1 px-2 text-[9.5px] text-slate-800">
           {s?.ortu || ''}
         </td>
-        <td className="border border-slate-700 py-1 px-1.5 text-[9.5px] leading-tight">
+        <td className="border border-slate-700 py-1 px-2 text-[9px] leading-tight text-slate-800">
           {s?.alamat || ''}
         </td>
       </tr>
@@ -223,16 +223,16 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse border border-slate-700 text-xs">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[10px] uppercase tracking-wide">
-                  <th className="border border-slate-700 py-1.5 px-1 w-8">No</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Nama Peserta Didik</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[9.5px] uppercase tracking-wide">
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left">Nama Peserta Didik</th>
                   <th className="border border-slate-700 py-1.5 px-1 w-14">Kelas</th>
                   <th className="border border-slate-700 py-1.5 px-1 w-28">NIS / NISN</th>
-                  <th className="border border-slate-700 py-1.5 px-1 w-8">JK</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Tempat, Tgl Lahir</th>
-                  <th className="border border-slate-700 py-1.5 px-1.5 w-16">Agama</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Nama Orang Tua</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Alamat Tinggal</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-10">JK</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-40">Tempat, Tgl Lahir</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-18">Agama</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-40">Nama Orang Tua</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-52">Alamat Tinggal</th>
                 </tr>
               </thead>
               <tbody>
@@ -289,16 +289,16 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse border border-slate-700 text-xs">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[10px] uppercase tracking-wide">
-                  <th className="border border-slate-700 py-1.5 px-1 w-8">No</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Nama Peserta Didik</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[9.5px] uppercase tracking-wide">
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left">Nama Peserta Didik</th>
                   <th className="border border-slate-700 py-1.5 px-1 w-14">Kelas</th>
                   <th className="border border-slate-700 py-1.5 px-1 w-28">NIS / NISN</th>
-                  <th className="border border-slate-700 py-1.5 px-1 w-8">JK</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Tempat, Tgl Lahir</th>
-                  <th className="border border-slate-700 py-1.5 px-1.5 w-16">Agama</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Nama Orang Tua</th>
-                  <th className="border border-slate-700 py-1.5 px-2">Alamat Tinggal</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-10">JK</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-40">Tempat, Tgl Lahir</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-18">Agama</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-40">Nama Orang Tua</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left w-52">Alamat Tinggal</th>
                 </tr>
               </thead>
               <tbody>
@@ -311,12 +311,23 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
           </div>
 
           {/* Tanda Tangan & Pengesahan Dokumen di Bawah Tabel Halaman 2 */}
-          <div className="pt-2 grid grid-cols-2 gap-8 text-xs font-semibold">
-            <div className="text-center space-y-10">
-              <p className="leading-snug">
+          <div className="pt-2 grid grid-cols-2 gap-8 text-xs font-semibold tanda-tangan-block">
+            <div className="text-center flex flex-col justify-between h-32">
+              <p className="leading-tight">
                 Mengetahui,<br />
                 Pengawas Sekolah Pembina
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {penjabatData?.pengawas?.ttd ? (
+                  <img
+                    src={penjabatData.pengawas.ttd}
+                    alt="TTD Pengawas"
+                    className="h-14 max-w-[130px] object-contain"
+                  />
+                ) : (
+                  <div className="h-10" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-900 text-xs uppercase">
                   {penjabatData?.pengawas?.nama ? penjabatData.pengawas.nama : '...................................................'}
@@ -327,11 +338,22 @@ export const Format8355CetakView: React.FC<Format8355CetakViewProps> = ({
               </div>
             </div>
 
-            <div className="text-center space-y-10">
-              <p className="leading-snug">
+            <div className="text-center flex flex-col justify-between h-32">
+              <p className="leading-tight">
                 Jakarta, <span>{todayStr}</span><br />
                 {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {penjabatData?.ks?.ttd ? (
+                  <img
+                    src={penjabatData.ks.ttd}
+                    alt="TTD Kepala Sekolah"
+                    className="h-14 max-w-[130px] object-contain"
+                  />
+                ) : (
+                  <div className="h-10" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-900 text-xs uppercase">
                   {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}

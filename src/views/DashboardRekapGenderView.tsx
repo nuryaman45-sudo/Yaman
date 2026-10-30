@@ -328,41 +328,41 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse border border-slate-700 text-xs">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[11px] uppercase">
-                  <th className="border border-slate-700 p-2 w-10">No</th>
-                  <th className="border border-slate-700 p-2 w-24">Rombel / Kelas</th>
-                  <th className="border border-slate-700 p-2 text-left pl-3">Wali Kelas</th>
-                  <th className="border border-slate-700 p-2 w-24 bg-blue-50/60 text-blue-900">Laki-Laki (L)</th>
-                  <th className="border border-slate-700 p-2 w-24 bg-pink-50/60 text-pink-900">Perempuan (P)</th>
-                  <th className="border border-slate-700 p-2 w-28 bg-slate-100 font-black text-slate-950">Jumlah (L+P)</th>
-                  <th className="border border-slate-700 p-2 w-28">Proporsi (% L : % P)</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[10px] uppercase">
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                  <th className="border border-slate-700 py-1.5 px-2 w-24">Rombel / Kelas</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left pl-3">Wali Kelas</th>
+                  <th className="border border-slate-700 py-1.5 px-2 w-24 bg-blue-50/60 text-blue-900">Laki-Laki (L)</th>
+                  <th className="border border-slate-700 py-1.5 px-2 w-24 bg-pink-50/60 text-pink-900">Perempuan (P)</th>
+                  <th className="border border-slate-700 py-1.5 px-2 w-28 bg-slate-100 font-black text-slate-950">Jumlah (L+P)</th>
+                  <th className="border border-slate-700 py-1.5 px-2 w-28">Proporsi (% L : % P)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-slate-900">
                 {rekapRows.map((row) => (
                   <tr key={row.kelas} className="hover:bg-slate-50 transition">
-                    <td className="border border-slate-700 p-2 text-center font-semibold text-slate-700">
+                    <td className="border border-slate-700 py-1 px-1 text-center font-semibold text-slate-700 text-[10px]">
                       {row.no}
                     </td>
-                    <td className="border border-slate-700 p-2 text-center font-extrabold text-blue-900 uppercase">
+                    <td className="border border-slate-700 py-1 px-2 text-center font-extrabold text-blue-900 uppercase text-[10px]">
                       KELAS {row.kelas}
                     </td>
-                    <td className="border border-slate-700 p-2 pl-3">
-                      <p className="font-bold text-slate-900 uppercase">{row.waliKelas}</p>
-                      <p className="text-[10px] text-slate-600 font-mono">NIP. {row.nipWaliKelas}</p>
+                    <td className="border border-slate-700 py-1 px-2 pl-3">
+                      <p className="font-bold text-slate-900 uppercase text-[10px]">{row.waliKelas}</p>
+                      <p className="text-[9.5px] text-slate-600 font-mono">NIP. {row.nipWaliKelas}</p>
                     </td>
-                    <td className="border border-slate-700 p-2 text-center font-black text-blue-900 bg-blue-50/30">
+                    <td className="border border-slate-700 py-1 px-2 text-center font-black text-blue-900 bg-blue-50/30 text-[10px]">
                       <span>{row.jmlL}</span>
-                      <span className="text-[10px] text-blue-700 block font-normal">({row.pctL}%)</span>
+                      <span className="text-[9px] text-blue-700 block font-normal">({row.pctL}%)</span>
                     </td>
-                    <td className="border border-slate-700 p-2 text-center font-black text-pink-900 bg-pink-50/30">
+                    <td className="border border-slate-700 py-1 px-2 text-center font-black text-pink-900 bg-pink-50/30 text-[10px]">
                       <span>{row.jmlP}</span>
-                      <span className="text-[10px] text-pink-700 block font-normal">({row.pctP}%)</span>
+                      <span className="text-[9px] text-pink-700 block font-normal">({row.pctP}%)</span>
                     </td>
-                    <td className="border border-slate-700 p-2 text-center font-black text-slate-950 bg-slate-50 text-sm">
+                    <td className="border border-slate-700 py-1 px-2 text-center font-black text-slate-950 bg-slate-50 text-xs">
                       {row.jmlTotal}
                     </td>
-                    <td className="border border-slate-700 p-2 text-center font-semibold text-[11px] text-slate-800">
+                    <td className="border border-slate-700 py-1 px-2 text-center font-semibold text-[10px] text-slate-800">
                       {row.pctL}% L : {row.pctP}% P
                     </td>
                   </tr>
@@ -394,12 +394,23 @@ export const DashboardRekapGenderView: React.FC<DashboardRekapGenderViewProps> =
           </div>
 
           {/* Official Signatures for F4 Document */}
-          <div className="pt-6 flex justify-end text-xs font-semibold text-slate-900">
-            <div className="text-center space-y-14 w-64">
+          <div className="pt-4 flex justify-end text-xs font-semibold text-slate-900 tanda-tangan-block">
+            <div className="text-center flex flex-col justify-between h-32 w-64">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
                 {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {penjabatData?.ks?.ttd ? (
+                  <img
+                    src={penjabatData.ks.ttd}
+                    alt="TTD Kepala Sekolah"
+                    className="h-14 max-w-[140px] object-contain"
+                  />
+                ) : (
+                  <div className="h-10" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-950 text-sm uppercase">
                   {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}

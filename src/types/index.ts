@@ -17,6 +17,7 @@ export interface WaliKelas {
   kelas: string;
   nama: string;
   nip: string;
+  ttd?: string;
 }
 
 export interface PenjabatData {
@@ -24,10 +25,12 @@ export interface PenjabatData {
     nama: string;
     nip: string;
     jabatan?: string;
+    ttd?: string;
   };
   pengawas: {
     nama: string;
     nip: string;
+    ttd?: string;
   };
   waliKelas: WaliKelas[];
 }

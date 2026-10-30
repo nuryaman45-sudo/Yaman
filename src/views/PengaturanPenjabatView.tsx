@@ -14,6 +14,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Users,
+  Upload,
+  PenTool,
+  Image as ImageIcon,
+  RotateCcw,
 } from 'lucide-react';
 import { PenjabatData, WaliKelas } from '../types';
 
@@ -32,9 +36,11 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
   const [ksNama, setKsNama] = useState(penjabatData.ks?.nama || '');
   const [ksNip, setKsNip] = useState(penjabatData.ks?.nip || '');
   const [ksJabatan, setKsJabatan] = useState(penjabatData.ks?.jabatan || '');
+  const [ksTtd, setKsTtd] = useState<string>(penjabatData.ks?.ttd || '');
 
   const [pengawasNama, setPengawasNama] = useState(penjabatData.pengawas?.nama || '');
   const [pengawasNip, setPengawasNip] = useState(penjabatData.pengawas?.nip || '');
+  const [pengawasTtd, setPengawasTtd] = useState<string>(penjabatData.pengawas?.ttd || '');
 
   // Wali Kelas State
   const [waliKelasList, setWaliKelasList] = useState<WaliKelas[]>(penjabatData.waliKelas || []);
@@ -44,7 +50,12 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
     message: string;
   } | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // Hidden File Inputs
+  const excelFileInputRef = useRef<HTMLInputElement>(null);
+  const ksTtdInputRef = useRef<HTMLInputElement>(null);
+  const pengawasTtdInputRef = useRef<HTMLInputElement>(null);
+  const waliTtdInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingWaliIndex, setUploadingWaliIndex] = useState<number | null>(null);
 
   const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setNotification({ type, message });
@@ -53,23 +64,111 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
     }, 4500);
   };
 
+  // Helper to process signature image to lightweight PNG
+  const processSignatureFile = (file: File, callback: (base64: string) => void) => {
+    if (!file.type.startsWith('image/')) {
+      showNotification('Berkas harus berupa file gambar (PNG, JPG, atau WEBP).', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX_WIDTH = 400;
+        const MAX_HEIGHT = 200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/png');
+          callback(dataUrl);
+        } else {
+          callback(e.target?.result as string);
+        }
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleKsTtdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processSignatureFile(file, (dataUrl) => {
+      setKsTtd(dataUrl);
+      showNotification('Tanda tangan Kepala Sekolah berhasil diunggah.');
+    });
+    if (e.target) e.target.value = '';
+  };
+
+  const handlePengawasTtdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processSignatureFile(file, (dataUrl) => {
+      setPengawasTtd(dataUrl);
+      showNotification('Tanda tangan Pengawas Pembina berhasil diunggah.');
+    });
+    if (e.target) e.target.value = '';
+  };
+
+  const triggerUploadWaliTtd = (index: number) => {
+    setUploadingWaliIndex(index);
+    waliTtdInputRef.current?.click();
+  };
+
+  const handleWaliTtdUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || uploadingWaliIndex === null) return;
+    processSignatureFile(file, (dataUrl) => {
+      handleUpdateWaliKelas(uploadingWaliIndex, 'ttd', dataUrl);
+      showNotification(
+        `Tanda tangan Wali Kelas ${waliKelasList[uploadingWaliIndex]?.kelas || ''} berhasil diunggah.`
+      );
+      setUploadingWaliIndex(null);
+    });
+    if (e.target) e.target.value = '';
+  };
+
   const handleClearPejabat = () => {
     setKsNama('');
     setKsNip('');
     setKsJabatan('');
+    setKsTtd('');
     setPengawasNama('');
     setPengawasNip('');
-    showNotification('Kolom isian Kepala Sekolah dan Pengawas Pembina telah dikosongkan.', 'info');
+    setPengawasTtd('');
+    showNotification('Kolom isian dan tanda tangan pejabat telah dikosongkan.', 'info');
   };
 
   const handleClearAll = () => {
     setKsNama('');
     setKsNip('');
     setKsJabatan('');
+    setKsTtd('');
     setPengawasNama('');
     setPengawasNip('');
+    setPengawasTtd('');
     setWaliKelasList([]);
-    showNotification('Seluruh data pejabat dan wali kelas telah dikosongkan.', 'info');
+    showNotification('Seluruh data pejabat, wali kelas, dan tanda tangan telah dikosongkan.', 'info');
   };
 
   const handleClearWaliKelas = () => {
@@ -81,7 +180,6 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
   };
 
   const handleAddWaliKelas = () => {
-    // Determine next suggestion name
     const count = waliKelasList.length;
     let suggestedKelas = `VII-${String.fromCharCode(65 + count)}`;
     if (count >= 10 && count < 20) {
@@ -96,6 +194,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
         kelas: suggestedKelas,
         nama: '',
         nip: '',
+        ttd: '',
       },
     ]);
   };
@@ -125,6 +224,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
         'KELAS': (wk.kelas || '').trim().toUpperCase(),
         'NAMA WALI KELAS': (wk.nama || '').trim(),
         'NIP': (wk.nip || '').trim() || '-',
+        'STATUS TTD': wk.ttd ? 'Ada Tanda Tangan' : 'Belum Ada',
       }));
 
       const ws = XLSX.utils.json_to_sheet(dataToExport);
@@ -133,6 +233,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
         { wch: 15 },
         { wch: 38 },
         { wch: 26 },
+        { wch: 18 },
       ];
 
       const wb = XLSX.utils.book_new();
@@ -204,10 +305,16 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
           const nipVal = nipKey ? String(row[nipKey]).trim() : '';
 
           if (kelasVal || namaVal) {
+            // Check if existing wali kelas has ttd to preserve
+            const existingWk = waliKelasList.find(
+              (w) => w.kelas.toUpperCase() === kelasVal.toUpperCase()
+            );
+
             parsedWali.push({
               kelas: kelasVal || `VII-${String.fromCharCode(65 + idx)}`,
               nama: namaVal,
               nip: nipVal === '-' || !nipVal ? '' : nipVal,
+              ttd: existingWk?.ttd || '',
             });
           }
         });
@@ -242,18 +349,21 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
         nama: ksNama.trim(),
         nip: ksNip.trim(),
         jabatan: ksJabatan.trim(),
+        ttd: ksTtd,
       },
       pengawas: {
         nama: pengawasNama.trim(),
         nip: pengawasNip.trim(),
+        ttd: pengawasTtd,
       },
       waliKelas: waliKelasList.map((wk) => ({
         kelas: wk.kelas.trim(),
         nama: wk.nama.trim(),
         nip: wk.nip.trim(),
+        ttd: wk.ttd || '',
       })),
     });
-    showNotification('Data pejabat dan wali kelas berhasil disimpan!', 'success');
+    showNotification('Data pejabat, wali kelas, dan tanda tangan berhasil disimpan!', 'success');
   };
 
   const filteredWaliKelas = waliKelasList.filter((wk) => {
@@ -268,12 +378,33 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
 
   return (
     <div className="space-y-6 max-w-5xl">
-      {/* Hidden file input for Excel import */}
+      {/* Hidden file inputs */}
       <input
         type="file"
-        ref={fileInputRef}
+        ref={excelFileInputRef}
         onChange={handleImportExcel}
         accept=".xlsx, .xls, .csv"
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={ksTtdInputRef}
+        onChange={handleKsTtdUpload}
+        accept="image/png, image/jpeg, image/webp"
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={pengawasTtdInputRef}
+        onChange={handlePengawasTtdUpload}
+        accept="image/png, image/jpeg, image/webp"
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={waliTtdInputRef}
+        onChange={handleWaliTtdUpload}
+        accept="image/png, image/jpeg, image/webp"
         className="hidden"
       />
 
@@ -289,7 +420,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                 Input Data Pejabat & Pengesah Dokumen
               </h3>
               <p className="text-xs text-slate-400">
-                Data Kepala Sekolah, Pengawas Pembina, dan Wali Kelas untuk lembar pengesahan resmi
+                Data Kepala Sekolah, Pengawas Pembina, Wali Kelas, serta tanda tangan digital untuk lembar cetak resmi
               </p>
             </div>
           </div>
@@ -299,7 +430,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
               type="button"
               onClick={handleClearAll}
               className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5 cursor-pointer"
-              title="Kosongkan seluruh kolom isian pejabat & wali kelas"
+              title="Kosongkan seluruh isian pejabat, wali kelas, dan tanda tangan"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Kosongkan Semua Isian</span>
@@ -370,16 +501,17 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
           {/* TAB 1: PEJABAT SEKOLAH */}
           {activeTab === 'pejabat' && (
             <div className="space-y-6 animate-fade-in">
-              {/* Kepala Sekolah */}
-              <div className="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+              {/* Kepala Sekolah Card */}
+              <div className="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <h4 className="font-bold text-blue-900 flex items-center gap-2 text-xs">
                     <User className="w-4 h-4 text-blue-600" /> Kepala Sekolah
                   </h4>
                   <span className="text-[11px] text-slate-500 font-medium">
-                    Penandatangan Form 8355 & Rapor
+                    Penandatangan Form 8355, Rekapitulasi & Mutasi
                   </span>
                 </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
                     <label className="font-semibold block mb-1 text-slate-700">
@@ -418,18 +550,73 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* Upload Tanda Tangan Kepala Sekolah */}
+                <div className="pt-2 border-t border-slate-200/80">
+                  <label className="font-semibold block mb-2 text-slate-700 text-xs flex items-center gap-1.5">
+                    <PenTool className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Tanda Tangan Digital Kepala Sekolah</span>
+                  </label>
+
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="w-48 h-24 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-2 overflow-hidden shadow-xs relative">
+                      {ksTtd ? (
+                        <img
+                          src={ksTtd}
+                          alt="Tanda Tangan Kepala Sekolah"
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      ) : (
+                        <div className="text-center text-slate-400">
+                          <ImageIcon className="w-6 h-6 mx-auto mb-1 text-slate-300" />
+                          <span className="text-[10px]">Belum ada TTD</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => ksTtdInputRef.current?.click()}
+                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{ksTtd ? 'Ganti Tanda Tangan' : 'Upload Tanda Tangan'}</span>
+                        </button>
+
+                        {ksTtd && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setKsTtd('');
+                              showNotification('Tanda tangan Kepala Sekolah dihapus.', 'info');
+                            }}
+                            className="text-xs text-rose-600 hover:bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl font-medium transition cursor-pointer"
+                          >
+                            Hapus
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-slate-400">
+                        Format disarankan PNG latar belakang transparan (maks. 2MB).
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Pengawas Sekolah Pembina */}
-              <div className="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+              {/* Pengawas Sekolah Pembina Card */}
+              <div className="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <h4 className="font-bold text-blue-900 flex items-center gap-2 text-xs">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" /> Pengawas Sekolah Pembina
                   </h4>
                   <span className="text-[11px] text-slate-500 font-medium">
-                    Penandatangan Berita Acara & Pengesahan
+                    Penandatangan Lembar Pengesahan Form 8355
                   </span>
                 </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
                     <label className="font-semibold block mb-1 text-slate-700">
@@ -456,13 +643,67 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* Upload Tanda Tangan Pengawas Sekolah */}
+                <div className="pt-2 border-t border-slate-200/80">
+                  <label className="font-semibold block mb-2 text-slate-700 text-xs flex items-center gap-1.5">
+                    <PenTool className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Tanda Tangan Digital Pengawas Pembina</span>
+                  </label>
+
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="w-48 h-24 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-2 overflow-hidden shadow-xs relative">
+                      {pengawasTtd ? (
+                        <img
+                          src={pengawasTtd}
+                          alt="Tanda Tangan Pengawas"
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      ) : (
+                        <div className="text-center text-slate-400">
+                          <ImageIcon className="w-6 h-6 mx-auto mb-1 text-slate-300" />
+                          <span className="text-[10px]">Belum ada TTD</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => pengawasTtdInputRef.current?.click()}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{pengawasTtd ? 'Ganti Tanda Tangan' : 'Upload Tanda Tangan'}</span>
+                        </button>
+
+                        {pengawasTtd && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPengawasTtd('');
+                              showNotification('Tanda tangan Pengawas Pembina dihapus.', 'info');
+                            }}
+                            className="text-xs text-rose-600 hover:bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl font-medium transition cursor-pointer"
+                          >
+                            Hapus
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-slate-400">
+                        Format disarankan PNG latar belakang transparan (maks. 2MB).
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
                   onClick={handleClearPejabat}
-                  className="text-xs text-slate-500 hover:text-rose-600 hover:underline flex items-center gap-1"
+                  className="text-xs text-slate-500 hover:text-rose-600 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Kosongkan Isian Pejabat</span>
@@ -499,7 +740,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                   {/* Impor Excel */}
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => excelFileInputRef.current?.click()}
                     className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition shadow-xs cursor-pointer"
                     title="Impor daftar Wali Kelas dari berkas Excel (.xlsx / .csv)"
                   >
@@ -579,7 +820,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                     <div className="flex items-center justify-center gap-2 pt-1">
                       <button
                         type="button"
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => excelFileInputRef.current?.click()}
                         className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5"
                       >
                         <FileUp className="w-3.5 h-3.5" />
@@ -610,7 +851,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                         <div className="w-7 text-center font-bold text-slate-400 text-[11px] shrink-0">
                           {originalIndex + 1}
                         </div>
-                        <div className="w-full sm:w-28 shrink-0">
+                        <div className="w-full sm:w-24 shrink-0">
                           <label className="font-semibold block mb-0.5 text-slate-600 text-[10px]">
                             Rombel / Kelas
                           </label>
@@ -624,7 +865,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                             className="w-full border border-slate-300 rounded-lg p-2 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-slate-800 text-xs"
                           />
                         </div>
-                        <div className="flex-1 min-w-[200px]">
+                        <div className="flex-1 min-w-[180px]">
                           <label className="font-semibold block mb-0.5 text-slate-600 text-[10px]">
                             Nama Lengkap Wali Kelas & Gelar
                           </label>
@@ -638,7 +879,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                             className="w-full border border-slate-300 rounded-lg p-2 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-800 text-xs"
                           />
                         </div>
-                        <div className="w-full sm:w-48 shrink-0">
+                        <div className="w-full sm:w-40 shrink-0">
                           <label className="font-semibold block mb-0.5 text-slate-600 text-[10px]">
                             NIP Wali Kelas
                           </label>
@@ -652,6 +893,53 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
                             className="w-full border border-slate-300 rounded-lg p-2 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-slate-800 text-xs"
                           />
                         </div>
+
+                        {/* TTD Wali Kelas Upload Section */}
+                        <div className="w-full sm:w-44 shrink-0">
+                          <label className="font-semibold block mb-0.5 text-slate-600 text-[10px] flex items-center gap-1">
+                            <PenTool className="w-3 h-3 text-indigo-600" />
+                            <span>Tanda Tangan</span>
+                          </label>
+                          {wk.ttd ? (
+                            <div className="flex items-center gap-1.5 p-1 bg-slate-50 border border-slate-300 rounded-lg">
+                              <div className="h-7 w-20 bg-white rounded border border-slate-200 flex items-center justify-center p-0.5 overflow-hidden">
+                                <img
+                                  src={wk.ttd}
+                                  alt={`TTD ${wk.kelas}`}
+                                  className="max-h-full max-w-full object-contain"
+                                />
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => triggerUploadWaliTtd(originalIndex)}
+                                className="text-[10px] font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                                title="Ganti Tanda Tangan"
+                              >
+                                Ganti
+                              </button>
+                              <span className="text-slate-300">•</span>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateWaliKelas(originalIndex, 'ttd', '')}
+                                className="text-[10px] font-semibold text-rose-500 hover:text-rose-700 hover:underline cursor-pointer"
+                                title="Hapus Tanda Tangan"
+                              >
+                                Hapus
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => triggerUploadWaliTtd(originalIndex)}
+                              className="w-full py-1.5 px-2 bg-slate-50 hover:bg-indigo-50 border border-dashed border-indigo-300 rounded-lg text-indigo-700 text-[11px] font-medium flex items-center justify-center gap-1 transition cursor-pointer"
+                              title="Unggah berkas tanda tangan wali kelas"
+                            >
+                              <Upload className="w-3 h-3 text-indigo-600" />
+                              <span>Upload TTD</span>
+                            </button>
+                          )}
+                        </div>
+
                         <div className="pt-4 sm:pt-4">
                           <button
                             type="button"
@@ -671,7 +959,7 @@ export const PengaturanPenjabatView: React.FC<PengaturanPenjabatViewProps> = ({
               {/* Submit Button on Tab 2 */}
               <div className="pt-4 flex items-center justify-between border-t border-slate-200">
                 <p className="text-[11px] text-slate-400">
-                  Data Wali Kelas akan otomatis tersinkronisasi pada Form 8355 Cetak, Daftar Siswa, dan Lembar Absensi.
+                  Data Wali Kelas dan Tanda Tangan akan otomatis tercetak pada Form 8355, Daftar Siswa, dan Lembar Absensi.
                 </p>
                 <button
                   type="submit"

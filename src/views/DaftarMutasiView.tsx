@@ -240,7 +240,7 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
       await exportElementToPDF(printableRef.current, {
         filename,
         orientation: 'landscape',
-        singlePage: true,
+        singlePage: filteredMutasi.length <= 16,
       });
     } catch (err) {
       console.error('Gagal membuat PDF mutasi:', err);
@@ -680,17 +680,17 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse border border-slate-700 text-xs">
                 <thead>
-                  <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[11px] uppercase">
-                    <th className="border border-slate-700 p-2 w-10">No</th>
-                    <th className="border border-slate-700 p-2 w-24">Tanggal</th>
-                    <th className="border border-slate-700 p-2">Nama Peserta Didik</th>
-                    <th className="border border-slate-700 p-2 w-16">Kelas</th>
-                    <th className="border border-slate-700 p-2 w-28">NIS / NISN</th>
-                    <th className="border border-slate-700 p-2 w-10">JK</th>
-                    <th className="border border-slate-700 p-2 w-24">Jenis Mutasi</th>
-                    <th className="border border-slate-700 p-2">Sekolah Asal / Tujuan</th>
-                    <th className="border border-slate-700 p-2">Alasan & No. Surat</th>
-                    <th className="border border-slate-700 p-2 w-20 no-print text-center">Aksi</th>
+                  <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[9.5px] uppercase">
+                    <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-24">Tanggal</th>
+                    <th className="border border-slate-700 py-1.5 px-2 text-left min-w-[170px]">Nama Peserta Didik</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-14">Kelas</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-28">NIS / NISN</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-9">JK</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-24">Jenis Mutasi</th>
+                    <th className="border border-slate-700 py-1.5 px-2 text-left w-44">Sekolah Asal / Tujuan</th>
+                    <th className="border border-slate-700 py-1.5 px-2 text-left">Alasan & No. Surat</th>
+                    <th className="border border-slate-700 py-1.5 px-1 w-16 no-print text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700">
@@ -765,12 +765,23 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
             </div>
 
             {/* Official Signatures (Hanya Kepala Sekolah, Pengawas Dihapus) */}
-            <div className="pt-3 pb-3 flex justify-end text-xs font-semibold text-slate-900">
-              <div className="text-center space-y-8 w-60">
+            <div className="pt-3 pb-3 flex justify-end text-xs font-semibold text-slate-900 tanda-tangan-block">
+              <div className="text-center flex flex-col justify-between h-32 w-60">
                 <p className="leading-snug">
                   Jakarta, <span>{todayStr}</span><br />
                   {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
                 </p>
+                <div className="flex-1 flex items-center justify-center my-0.5">
+                  {penjabatData?.ks?.ttd ? (
+                    <img
+                      src={penjabatData.ks.ttd}
+                      alt="TTD Kepala Sekolah"
+                      className="h-12 max-w-[130px] object-contain"
+                    />
+                  ) : (
+                    <div className="h-8" />
+                  )}
+                </div>
                 <div>
                   <p className="font-bold underline text-slate-900 text-xs uppercase">
                     {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}
@@ -1019,12 +1030,23 @@ export const DaftarMutasiView: React.FC<DaftarMutasiViewProps> = ({
               </div>
 
               {/* Official Signatures for F4 Document */}
-              <div className="pt-3 pb-3 flex justify-end text-xs font-semibold text-slate-900">
-                <div className="text-center space-y-8 w-60">
+              <div className="pt-3 pb-3 flex justify-end text-xs font-semibold text-slate-900 tanda-tangan-block">
+                <div className="text-center flex flex-col justify-between h-32 w-60">
                   <p className="leading-snug">
                     Jakarta, <span>{todayStr}</span><br />
                     {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
                   </p>
+                  <div className="flex-1 flex items-center justify-center my-0.5">
+                    {penjabatData?.ks?.ttd ? (
+                      <img
+                        src={penjabatData.ks.ttd}
+                        alt="TTD Kepala Sekolah"
+                        className="h-12 max-w-[130px] object-contain"
+                      />
+                    ) : (
+                      <div className="h-8" />
+                    )}
+                  </div>
                   <div>
                     <p className="font-bold underline text-slate-950 text-xs uppercase">
                       {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}

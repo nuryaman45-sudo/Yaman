@@ -176,6 +176,7 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
       await exportElementToPDF(printableRef.current, {
         filename: `Rekapitulasi_Kategori_Nama_dan_Usia_${selectedKelas !== 'ALL' ? `Kelas_${selectedKelas}` : 'Semua_Kelas'}_SMPN18_F4.pdf`,
         orientation: 'portrait',
+        singlePage: filteredStudents.length <= 40,
       });
     } catch (err) {
       console.error('Gagal membuat PDF Kategori Usia:', err);
@@ -471,44 +472,44 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
             </h4>
             <table className="w-full text-left border-collapse border border-slate-700 text-xs">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[10.5px] uppercase">
-                  <th className="border border-slate-700 p-1.5 w-10">No</th>
-                  <th className="border border-slate-700 p-1.5 text-left pl-3">Kelas / Rombel</th>
-                  <th className="border border-slate-700 p-1.5 w-20">&lt; 12 Thn</th>
-                  <th className="border border-slate-700 p-1.5 w-20">12 Thn</th>
-                  <th className="border border-slate-700 p-1.5 w-20">13 Thn</th>
-                  <th className="border border-slate-700 p-1.5 w-20">14 Thn</th>
-                  <th className="border border-slate-700 p-1.5 w-20">&ge; 15 Thn</th>
-                  <th className="border border-slate-700 p-1.5 w-24 bg-slate-300 font-black">Total Siswa</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[9.5px] uppercase">
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left pl-3 w-28">Kelas / Rombel</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-16">&lt; 12 Thn</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-16">12 Thn</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-16">13 Thn</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-16">14 Thn</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-16">&ge; 15 Thn</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-20 bg-slate-200 font-black">Total</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-slate-900 text-center">
                 {classMatrix.map((m, idx) => (
                   <tr key={m.kelas} className="hover:bg-slate-50 transition">
-                    <td className="border border-slate-700 p-1.5 font-semibold text-slate-700">{idx + 1}</td>
-                    <td className="border border-slate-700 p-1.5 text-left pl-3 font-bold text-blue-900 uppercase">
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-slate-700 text-[10px]">{idx + 1}</td>
+                    <td className="border border-slate-700 py-1 px-2 text-left pl-3 font-bold text-blue-900 uppercase text-[10px]">
                       KELAS {m.kelas}
                     </td>
-                    <td className="border border-slate-700 p-1.5 font-semibold">{m.cLess12}</td>
-                    <td className="border border-slate-700 p-1.5 font-semibold">{m.c12}</td>
-                    <td className="border border-slate-700 p-1.5 font-semibold">{m.c13}</td>
-                    <td className="border border-slate-700 p-1.5 font-semibold">{m.c14}</td>
-                    <td className="border border-slate-700 p-1.5 font-semibold">{m.cOver14}</td>
-                    <td className="border border-slate-700 p-1.5 font-black bg-slate-100">{m.total}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-[10px]">{m.cLess12}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-[10px]">{m.c12}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-[10px]">{m.c13}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-[10px]">{m.c14}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-semibold text-[10px]">{m.cOver14}</td>
+                    <td className="border border-slate-700 py-1 px-1 font-black bg-slate-50 text-[10px]">{m.total}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr className="bg-slate-200 font-black text-slate-950 border-t-2 border-slate-800 text-center">
-                  <td colSpan={2} className="border border-slate-700 p-2 text-right uppercase tracking-wider text-xs">
+                  <td colSpan={2} className="border border-slate-700 py-1.5 px-2 text-right uppercase tracking-wider text-[10px]">
                     TOTAL KESELURUHAN :
                   </td>
-                  <td className="border border-slate-700 p-2 font-bold">{ageCategoryCounts[0].count}</td>
-                  <td className="border border-slate-700 p-2 font-bold">{ageCategoryCounts[1].count}</td>
-                  <td className="border border-slate-700 p-2 font-bold">{ageCategoryCounts[2].count}</td>
-                  <td className="border border-slate-700 p-2 font-bold">{ageCategoryCounts[3].count}</td>
-                  <td className="border border-slate-700 p-2 font-bold">{ageCategoryCounts[4].count}</td>
-                  <td className="border border-slate-700 p-2 font-black bg-slate-300 text-sm">
+                  <td className="border border-slate-700 py-1.5 px-1 font-bold text-[10px]">{ageCategoryCounts[0].count}</td>
+                  <td className="border border-slate-700 py-1.5 px-1 font-bold text-[10px]">{ageCategoryCounts[1].count}</td>
+                  <td className="border border-slate-700 py-1.5 px-1 font-bold text-[10px]">{ageCategoryCounts[2].count}</td>
+                  <td className="border border-slate-700 py-1.5 px-1 font-bold text-[10px]">{ageCategoryCounts[3].count}</td>
+                  <td className="border border-slate-700 py-1.5 px-1 font-bold text-[10px]">{ageCategoryCounts[4].count}</td>
+                  <td className="border border-slate-700 py-1.5 px-1 font-black bg-slate-300 text-xs">
                     {enrichedStudents.length}
                   </td>
                 </tr>
@@ -523,15 +524,15 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
             </h4>
             <table className="w-full text-left border-collapse border border-slate-700 text-xs">
               <thead>
-                <tr className="bg-slate-200/90 text-slate-900 text-center font-bold text-[10.5px] uppercase">
-                  <th className="border border-slate-700 p-2 w-10">No</th>
-                  <th className="border border-slate-700 p-2 text-left pl-3">Nama Lengkap Siswa</th>
-                  <th className="border border-slate-700 p-2 w-16">Kelas</th>
-                  <th className="border border-slate-700 p-2 w-20">NIS</th>
-                  <th className="border border-slate-700 p-2 w-10">JK</th>
-                  <th className="border border-slate-700 p-2 text-left pl-3">Tempat, Tgl Lahir</th>
-                  <th className="border border-slate-700 p-2 w-28">Usia Lengkap</th>
-                  <th className="border border-slate-700 p-2 w-24">Kategori Usia</th>
+                <tr className="bg-slate-100 text-slate-900 text-center font-bold text-[9.5px] uppercase">
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">No</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left pl-3">Nama Lengkap Siswa</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-14">Kelas</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-20">NIS</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-9">JK</th>
+                  <th className="border border-slate-700 py-1.5 px-2 text-left pl-3 w-40">Tempat, Tgl Lahir</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-24">Usia Lengkap</th>
+                  <th className="border border-slate-700 py-1.5 px-1 w-24">Kategori Usia</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700 text-slate-900">
@@ -544,28 +545,28 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
                 ) : (
                   filteredStudents.map((s, idx) => (
                     <tr key={s.id} className="hover:bg-slate-50 transition">
-                      <td className="border border-slate-700 p-1.5 text-center font-semibold text-slate-700">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-semibold text-slate-700 text-[9.5px]">
                         {idx + 1}
                       </td>
-                      <td className="border border-slate-700 p-1.5 pl-3 font-bold text-slate-900 uppercase">
+                      <td className="border border-slate-700 py-1 px-2 pl-3 font-bold text-slate-900 uppercase text-[10px]">
                         {s.nama}
                       </td>
-                      <td className="border border-slate-700 p-1.5 text-center font-extrabold text-indigo-900 uppercase">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-extrabold text-indigo-900 uppercase text-[9.5px]">
                         {s.kelas}
                       </td>
-                      <td className="border border-slate-700 p-1.5 text-center font-mono text-[11px]">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-mono text-[9.5px]">
                         {s.nis}
                       </td>
-                      <td className="border border-slate-700 p-1.5 text-center font-bold">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-bold text-[9.5px]">
                         {s.jk}
                       </td>
-                      <td className="border border-slate-700 p-1.5 pl-3 text-[11px]">
+                      <td className="border border-slate-700 py-1 px-2 pl-3 text-[9.5px]">
                         <span className="font-semibold">{s.tempatLahir}</span>, {formatDateIndo(s.tglLahir)}
                       </td>
-                      <td className="border border-slate-700 p-1.5 text-center font-semibold font-mono text-[11px]">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-semibold font-mono text-[9.5px]">
                         {s.ageText}
                       </td>
-                      <td className="border border-slate-700 p-1.5 text-center font-bold text-[11px]">
+                      <td className="border border-slate-700 py-1 px-1 text-center font-bold text-[9.5px]">
                         {s.ageCategory}
                       </td>
                     </tr>
@@ -576,12 +577,23 @@ export const DashboardRekapUsiaView: React.FC<DashboardRekapUsiaViewProps> = ({
           </div>
 
           {/* Official Signatures for F4 Document */}
-          <div className="pt-6 flex justify-end text-xs font-semibold text-slate-900">
-            <div className="text-center space-y-14 w-64">
+          <div className="pt-4 flex justify-end text-xs font-semibold text-slate-900 tanda-tangan-block">
+            <div className="text-center flex flex-col justify-between h-32 w-64">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
                 {penjabatData?.ks?.jabatan || 'Kepala SMPN 18 Jakarta'}
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {penjabatData?.ks?.ttd ? (
+                  <img
+                    src={penjabatData.ks.ttd}
+                    alt="TTD Kepala Sekolah"
+                    className="h-14 max-w-[140px] object-contain"
+                  />
+                ) : (
+                  <div className="h-10" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-950 text-sm uppercase">
                   {penjabatData?.ks?.nama ? penjabatData.ks.nama : '...................................................'}

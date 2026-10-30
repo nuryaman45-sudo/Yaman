@@ -25,8 +25,8 @@
 /* STYLES KHUSUS CETAK RESMI F4 / LEGAL (FOLIO 215mm x 330mm) */
 @media print {
   @page {
-    /* Margin standar F4: Posisi data selalu dimulai dari atas dengan margin kanan-kiri seimbang */
-    margin: 8mm 10mm 8mm 10mm;
+    /* Margin standar F4 resmi: Atas/Bawah 10mm, Kiri/Kanan 12mm */
+    margin: 10mm 12mm 10mm 12mm;
   }
 
   html, body {
@@ -61,12 +61,22 @@
     margin-top: 0 !important;
     padding-top: 0 !important;
     width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
   }
 
   .print-portrait-f4 {
     padding: 0 !important;
     margin: 0 auto !important;
     margin-top: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Unconstrain all horizontal scroll wrappers so no table column is clipped */
+  .overflow-x-auto, .overflow-auto, [class*="overflow-"] {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: none !important;
   }
 
   .page-break {
@@ -84,12 +94,31 @@
     margin: 0 auto !important;
   }
 
+  table th, table td {
+    border: 1px solid #334155 !important;
+  }
+
+  table thead th {
+    background-color: #f1f5f9 !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+  }
+
   tr {
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
     page-break-after: auto;
   }
 
   thead {
-    display: table-header-group;
+    display: table-header-group !important;
+  }
+
+  /* Keep signatures intact without breaking across pages */
+  .signature-container, .tanda-tangan-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
+
+

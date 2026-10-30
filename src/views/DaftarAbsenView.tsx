@@ -72,17 +72,17 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
   const renderRow = (siswa: Siswa | null, number: number) => {
     return (
       <tr key={`absen-row-${number}`} className="hover:bg-slate-50 transition">
-        <td className="p-1 text-center font-semibold text-slate-700 border border-slate-500">
+        <td className="py-1 px-1 text-center font-bold text-slate-800 border border-slate-700 text-[9.5px]">
           {number}
         </td>
-        <td className="p-1 font-semibold text-slate-900 border border-slate-500 truncate max-w-[150px]">
-          {siswa ? siswa.nama : ''}
+        <td className="py-1 px-1.5 font-bold text-slate-900 border border-slate-700 truncate max-w-[170px] text-[9.5px]">
+          {siswa ? siswa.nama.toUpperCase() : ''}
         </td>
-        <td className="p-1 font-mono text-slate-800 border border-slate-500 text-center">
+        <td className="py-1 px-1 font-mono text-slate-800 border border-slate-700 text-center text-[9px]">
           {siswa ? siswa.nis : ''}
         </td>
         <td
-          className={`p-1 text-center font-bold border border-slate-500 ${
+          className={`py-1 px-0.5 text-center font-bold border border-slate-700 text-[9.5px] ${
             siswa?.jk === 'L' ? 'text-blue-700' : 'text-pink-700'
           }`}
         >
@@ -91,21 +91,21 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
         {Array.from({ length: 31 }).map((_, dIdx) => (
           <td
             key={`d-${dIdx}`}
-            className="p-0.5 border border-slate-500 text-center text-[9px] w-5 min-w-[20px]"
+            className="py-1 px-0 border border-slate-700 text-center text-[8.5px] w-5 min-w-[18px]"
           >
             &nbsp;
           </td>
         ))}
-        <td className="p-1 text-center border border-slate-500 font-semibold bg-amber-50/60 w-6">
+        <td className="py-1 px-0 text-center border border-slate-700 font-semibold bg-amber-50/60 w-6 text-[9px]">
           &nbsp;
         </td>
-        <td className="p-1 text-center border border-slate-500 font-semibold bg-blue-50/60 w-6">
+        <td className="py-1 px-0 text-center border border-slate-700 font-semibold bg-blue-50/60 w-6 text-[9px]">
           &nbsp;
         </td>
-        <td className="p-1 text-center border border-slate-500 font-semibold bg-rose-50/60 w-6">
+        <td className="py-1 px-0 text-center border border-slate-700 font-semibold bg-rose-50/60 w-6 text-[9px]">
           &nbsp;
         </td>
-        <td className="p-1 text-center border border-slate-500 font-bold bg-slate-100 w-7">
+        <td className="py-1 px-0 text-center border border-slate-700 font-bold bg-slate-100 w-7 text-[9px]">
           &nbsp;
         </td>
       </tr>
@@ -208,26 +208,26 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
           </div>
 
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left border-collapse border border-slate-500 min-w-[980px] text-[10px]">
+            <table className="w-full text-left border-collapse border border-slate-700 min-w-[980px] text-[10px]">
               <thead>
-                <tr className="bg-slate-200 text-slate-800 font-bold uppercase text-center text-[10px]">
-                  <th rowSpan={2} className="p-1 w-8 border border-slate-500">No.</th>
-                  <th rowSpan={2} className="p-1 min-w-[150px] border border-slate-500 text-left">Nama Peserta Didik</th>
-                  <th rowSpan={2} className="p-1 w-14 border border-slate-500">NIS</th>
-                  <th rowSpan={2} className="p-1 w-8 border border-slate-500">JK</th>
-                  <th colSpan={31} className="p-1 border border-slate-500">Tanggal Per Bulan</th>
-                  <th colSpan={4} className="p-1 border border-slate-500 bg-slate-300">Rekapitulasi</th>
+                <tr className="bg-slate-100 text-slate-900 font-bold uppercase text-center text-[9.5px]">
+                  <th rowSpan={2} className="p-1 w-9 border border-slate-700">No.</th>
+                  <th rowSpan={2} className="p-1 min-w-[170px] border border-slate-700 text-left pl-2">Nama Peserta Didik</th>
+                  <th rowSpan={2} className="p-1 w-16 border border-slate-700">NIS</th>
+                  <th rowSpan={2} className="p-1 w-9 border border-slate-700">JK</th>
+                  <th colSpan={31} className="p-1 border border-slate-700">Tanggal Per Bulan</th>
+                  <th colSpan={4} className="p-1 border border-slate-700 bg-slate-200">Rekapitulasi</th>
                 </tr>
-                <tr className="bg-slate-100 text-slate-700 font-semibold text-center text-[9px]">
+                <tr className="bg-slate-50 text-slate-800 font-semibold text-center text-[9px]">
                   {Array.from({ length: 31 }).map((_, d) => (
-                    <th key={`head1-${d + 1}`} className="w-5 border border-slate-500 p-0.5">
+                    <th key={`head1-${d + 1}`} className="w-5 border border-slate-700 p-0.5">
                       {d + 1}
                     </th>
                   ))}
-                  <th className="w-6 border border-slate-500 bg-amber-100 text-amber-900">S</th>
-                  <th className="w-6 border border-slate-500 bg-blue-100 text-blue-900">I</th>
-                  <th className="w-6 border border-slate-500 bg-rose-100 text-rose-900">A</th>
-                  <th className="w-7 border border-slate-500 bg-slate-300 text-slate-900">Jml</th>
+                  <th className="w-6 border border-slate-700 bg-amber-100 text-amber-900">S</th>
+                  <th className="w-6 border border-slate-700 bg-blue-100 text-blue-900">I</th>
+                  <th className="w-6 border border-slate-700 bg-rose-100 text-rose-900">A</th>
+                  <th className="w-7 border border-slate-700 bg-slate-200 text-slate-900 font-bold">Jml</th>
                 </tr>
               </thead>
               <tbody>
@@ -264,26 +264,26 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
           </div>
 
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left border-collapse border border-slate-500 min-w-[980px] text-[10px]">
+            <table className="w-full text-left border-collapse border border-slate-700 min-w-[980px] text-[10px]">
               <thead>
-                <tr className="bg-slate-200 text-slate-800 font-bold uppercase text-center text-[10px]">
-                  <th rowSpan={2} className="p-1 w-8 border border-slate-500">No.</th>
-                  <th rowSpan={2} className="p-1 min-w-[150px] border border-slate-500 text-left">Nama Peserta Didik</th>
-                  <th rowSpan={2} className="p-1 w-14 border border-slate-500">NIS</th>
-                  <th rowSpan={2} className="p-1 w-8 border border-slate-500">JK</th>
-                  <th colSpan={31} className="p-1 border border-slate-500">Tanggal Per Bulan</th>
-                  <th colSpan={4} className="p-1 border border-slate-500 bg-slate-300">Rekapitulasi</th>
+                <tr className="bg-slate-100 text-slate-900 font-bold uppercase text-center text-[9.5px]">
+                  <th rowSpan={2} className="p-1 w-9 border border-slate-700">No.</th>
+                  <th rowSpan={2} className="p-1 min-w-[170px] border border-slate-700 text-left pl-2">Nama Peserta Didik</th>
+                  <th rowSpan={2} className="p-1 w-16 border border-slate-700">NIS</th>
+                  <th rowSpan={2} className="p-1 w-9 border border-slate-700">JK</th>
+                  <th colSpan={31} className="p-1 border border-slate-700">Tanggal Per Bulan</th>
+                  <th colSpan={4} className="p-1 border border-slate-700 bg-slate-200">Rekapitulasi</th>
                 </tr>
-                <tr className="bg-slate-100 text-slate-700 font-semibold text-center text-[9px]">
+                <tr className="bg-slate-50 text-slate-800 font-semibold text-center text-[9px]">
                   {Array.from({ length: 31 }).map((_, d) => (
-                    <th key={`head2-${d + 1}`} className="w-5 border border-slate-500 p-0.5">
+                    <th key={`head2-${d + 1}`} className="w-5 border border-slate-700 p-0.5">
                       {d + 1}
                     </th>
                   ))}
-                  <th className="w-6 border border-slate-500 bg-amber-100 text-amber-900">S</th>
-                  <th className="w-6 border border-slate-500 bg-blue-100 text-blue-900">I</th>
-                  <th className="w-6 border border-slate-500 bg-rose-100 text-rose-900">A</th>
-                  <th className="w-7 border border-slate-500 bg-slate-300 text-slate-900">Jml</th>
+                  <th className="w-6 border border-slate-700 bg-amber-100 text-amber-900">S</th>
+                  <th className="w-6 border border-slate-700 bg-blue-100 text-blue-900">I</th>
+                  <th className="w-6 border border-slate-700 bg-rose-100 text-rose-900">A</th>
+                  <th className="w-7 border border-slate-700 bg-slate-200 text-slate-900 font-bold">Jml</th>
                 </tr>
               </thead>
               <tbody>
@@ -297,12 +297,23 @@ export const DaftarAbsenView: React.FC<DaftarAbsenViewProps> = ({
           </div>
 
           {/* Tanda Tangan Wali Kelas di Halaman 2 */}
-          <div className="pt-2 flex justify-end text-xs font-semibold">
-            <div className="text-center space-y-8 w-60">
+          <div className="pt-2 flex justify-end text-xs font-semibold tanda-tangan-block">
+            <div className="text-center flex flex-col justify-between h-30 w-60">
               <p className="leading-snug">
                 Jakarta, <span>{todayStr}</span><br />
                 Wali Kelas {selectedKelas !== 'ALL' ? selectedKelas : currentWaliKelas?.kelas || '-'}
               </p>
+              <div className="flex-1 flex items-center justify-center my-0.5">
+                {currentWaliKelas?.ttd ? (
+                  <img
+                    src={currentWaliKelas.ttd}
+                    alt="TTD Wali Kelas"
+                    className="h-12 max-w-[130px] object-contain"
+                  />
+                ) : (
+                  <div className="h-8" />
+                )}
+              </div>
               <div>
                 <p className="font-bold underline text-slate-900 text-xs uppercase">
                   {currentWaliKelas?.nama || '-'}
